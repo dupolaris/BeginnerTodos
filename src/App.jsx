@@ -18,6 +18,8 @@ function App() {
     { input: "Hello, add new To-do", complete: false },
   ]);
 
+  const [selectedTab, setSelectedTab] = useState("Open");
+
   function handleTodoInput(newTodo) {
     const newTodoList = [{ input: newTodo, complete: false }, ...todos];
     setTodos(newTodoList);
@@ -26,8 +28,12 @@ function App() {
   return (
     <>
       <Header todos={todos} />
-      <Tabs todos={todos} />
-      <TodoList todos={todos} />
+      <Tabs
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        todos={todos}
+      />
+      <TodoList selectedTab={selectedTab} todos={todos} />
       <TodoInput handleTodoInput={handleTodoInput} />
     </>
   );
