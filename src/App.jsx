@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Header } from "./components/Header";
 import { Tabs } from "./components/Tabs";
@@ -23,14 +23,17 @@ function App() {
   function handleTodoInput(newTodo) {
     const newTodoList = [{ input: newTodo, complete: false }, ...todos];
     setTodos(newTodoList);
+    handleSaveData(newTodoList);
   }
 
   function handleCompleteTodo(index) {
+    //edit/modify todos
     let newTodoList = [...todos];
     let completedTodoInList = newTodoList[index];
     completedTodoInList["complete"] = true;
     newTodoList[index] = completedTodoInList;
     setTodos(newTodoList);
+    handleSaveData(newTodoList);
   }
 
   function handleDeleteTodo(index) {
@@ -38,7 +41,25 @@ function App() {
       return valIndex !== index;
     });
     setTodos(newTodoList);
+    handleSaveData(newTodoList);
   }
+
+  //to persist latest data in local database
+  function handleSaveData(currTodos) {
+    localStorage.setItem("todo-app", JSON.stringify({ todos: currTodos }));
+  }
+
+  //useEffect Hook
+  //if [] is empty its called on mount event - means : run as soon as page is available
+  //pass todos to make it active whenever todos change
+  useEffect(() => {
+    if (!localStorage || !localStorage.getItem("todo-app")) {
+      return;
+    }
+
+    let db = JSON.parse(localStorage.getItem("todo-app"));
+    setTodos(db.todos);
+  }, []);
 
   return (
     <>
